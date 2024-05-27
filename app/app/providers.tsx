@@ -16,7 +16,7 @@ import { useMemo } from "react";
 import { BackpackWalletAdapter } from "@solana/wallet-adapter-backpack";
 
 export function Providers({ children }: { children: React.ReactNode }) {
-    const network = WalletAdapterNetwork.Mainnet;
+    const network = WalletAdapterNetwork.Devnet;
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
     const wallets = useMemo(() => [new SolflareWalletAdapter(), new PhantomWalletAdapter(), new BackpackWalletAdapter()], [network]);
 

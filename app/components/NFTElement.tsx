@@ -11,10 +11,10 @@ const NFTElement: React.FC<NFTElementProps> = ({ index, nft }) => {
             <div key={index} className="flex flex-col items-left p-5 bg-green-900/10 rounded-lg hover:opacity-80 ease-in-out transition cursor-pointer">
                 <div className="grid grid-cols-2 grid-flow-row">
                     <p className="text-xs font-light">{nft.collectionName}</p>
-                    <a href={`https://solana.fm/address/${nft.mintAddress}`} className="text-xs ml-auto">Link</a>
+                    <a href={`https://solana.fm/address/${nft.mintAddress}`} target="_blank" className="text-xs ml-auto">SolanaFM</a>
                 </div>
                 <img src={nft.image} alt={nft.collectionName} width="auto" height="auto" />
-                <p>{nft.price} SOL</p>
+                <p>Floor: {Math.round(nft.price * 1000) / 1000} SOL</p>
             </div>
         </>
     )

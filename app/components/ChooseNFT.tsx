@@ -37,7 +37,21 @@ export default function ChooseNFT({ onNFTSelected }: { onNFTSelected: (nft: NFT)
     }, [selectedNFT])
 
     const getAssetsByOwner = async () => {
-        const response = await fetch(`/api/get-nfts/${publicKey}/tokens`);
+        const response = await fetch(`/api/nft/tokens-for-address/${publicKey}/tokens`);
+        // const response = await fetch(`https://mainnet.helius-rpc.com/?api-key=${process.env.NEXT_PUBLIC_HELIUS_KEY}`, {
+        //     method: 'POST',
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({
+        //         "jsonrpc": "2.0",
+        //         "id": "text",
+        //         "method": "getAssetsByOwner",
+        //         "params": {
+        //             "ownerAddress": publicKey,
+        //         }
+        //     }),
+        // });
         if (!response.ok) {
             console.log('Error status:', response.status);
             console.log('Error status text:', response.statusText);
@@ -46,7 +60,6 @@ export default function ChooseNFT({ onNFTSelected }: { onNFTSelected: (nft: NFT)
         if (!contentType || !contentType.includes('application/json')) {
             console.log('Invalid content type:', contentType);
         }
-
 
         // const response = await fetch(url, {
         //     method: 'GET',
@@ -74,7 +87,12 @@ export default function ChooseNFT({ onNFTSelected }: { onNFTSelected: (nft: NFT)
         console.log(result);
 
         // console.log(result.items.filter((item: any) => !item.content.files || !item.content.files[0]))
-        setNfts(result);
+        Promise.all(result.map(async (nft: any) => {
+            const response = await fetch(`/api/nft/collection-stats/${nft.collection}/stats`).then(response => response.json())
+            nft.price = response.floorPrice / 1000000000
+        })).then(() => {
+            setNfts(result);
+        })
     };
 
     // useEffect(() => {
@@ -107,13 +125,21 @@ export default function ChooseNFT({ onNFTSelected }: { onNFTSelected: (nft: NFT)
                             setSelectedNFT(nft);
                             setNftIndexSelected(index);
                         }}>
-                            {nftIndexSelected == index && <div className="absolute flex bg-white/20 inset-0  rounded-lg flex justify-center items-center fill-white cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" /></svg></div>}
+                            {selectedNFT != null &&
+                                <>
+                                    {nftIndexSelected == index ?
+                                        <div className="absolute flex bg-white/10 inset-0  rounded-lg flex justify-center items-center fill-white cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24"><path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z" /></svg></div> :
+                                        <div className="absolute bg-gray-200/40 inset-0 rounded-lg" />
+                                    }
+                                </>
 
+                            }
                             <NFTElement index={index} nft={nft} />
                         </div>
                     )
 
-                }) : <p>No NFTs found</p>}
+                }) : <p>No NFTs found</p>
+                }
             </div>
         </>
     )

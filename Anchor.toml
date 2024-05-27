@@ -5,13 +5,19 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-loss_harvester = "3HbRiF7A9vBNwLgkFyafidxPBrTH4W7PUwz8iHPkntsH"
+loss_harvester = "2MsxpVjLVPfGmVnh4RDeahbRv65uqvMLJrgTdHxyE8CN"
+
+[programs.devnet]
+loss_harvester = "2MsxpVjLVPfGmVnh4RDeahbRv65uqvMLJrgTdHxyE8CN"
+
+[programs.mainnet]
+loss_harvester = "2MsxpVjLVPfGmVnh4RDeahbRv65uqvMLJrgTdHxyE8CN"
 
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "devnet"
 wallet = "/root/.config/solana/id.json"
 
 [scripts]
